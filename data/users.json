@@ -1,14 +1,19 @@
 [
-    {
-        "id": 1, 
-        "username": "Exemple", 
-        "password": "exemple",  
-        "collection": []
-    },
-    {
-        "id": 2, 
-        "username": "Toto", 
-        "password": "toot",  
-        "collection": []
-    }
+  {
+    "id": 1,
+    "username": "Exemple",
+    "password": "exemple",
+    "collection": []
+  },
+  {
+    "id": 2,
+    "username": "Toto",
+    "password": "toot",
+    "collection": []
+  },
+  {
+    "id": "4",
+    "username": "toto",
+    "password": "1234"
+  }
 ]
