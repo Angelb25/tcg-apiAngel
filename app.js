@@ -14,6 +14,8 @@ app.get("/", (req, res) => {
 
 app.post("/register", users.RegisterUser)
 
+app.get("/login", users.Login)
+
 app.listen(port, () => {
     console.log(`Serveur démarré sur http://localhost:${port}`);
 });

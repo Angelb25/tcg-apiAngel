@@ -3,13 +3,15 @@
     "id": 1,
     "username": "Exemple",
     "password": "exemple",
-    "collection": []
+    "collection": [],
+    "token": "TFqt3oNLk4TFKrRvH9Tcdk"
   },
   {
     "id": 2,
     "username": "Toto",
     "password": "toot",
-    "collection": []
+    "collection": [],
+    "token": "6ueCBFEn2ivF6AFK9j3NKZ"
   },
   {
     "id": "4",
