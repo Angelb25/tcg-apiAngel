@@ -4,5 +4,11 @@
         "username": "Exemple", 
         "password": "exemple",  
         "collection": []
+    },
+    {
+        "id": 2, 
+        "username": "Toto", 
+        "password": "toot",  
+        "collection": []
     }
 ]
