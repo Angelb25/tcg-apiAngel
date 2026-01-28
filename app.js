@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 
 app.post("/register", users.RegisterUser)
 
-app.patch("/user", users.Update);
+app.patch("/user", users.UpdateUser);
 
 app.get("/login", users.Login)
 
