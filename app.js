@@ -14,6 +14,8 @@ app.get("/", (req, res) => {
 
 app.post("/register", users.RegisterUser)
 
+app.patch("/user", users.Update);
+
 app.get("/login", users.Login)
 
 app.listen(port, () => {

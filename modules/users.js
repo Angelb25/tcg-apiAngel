@@ -96,5 +96,37 @@ function Login(req, res) {
         res.status(500).json({ message: "Erreur serveur" });
     }
 }
+function Update(req, res) {
+	// Lecture du fichier JSON 
+	const fileContent = fs.readFileSync("data/users.json", "utf-8");
+	const usersList = JSON.parse(fileContent);
 
-module.exports = { RegisterUser, Login };
+	// Récupération du token depuis les headers
+	const token = req.headers.authorization;
+
+	if (!token) {
+		return res.status(400).json({ message: "Erreur : Token manquant" });
+	}
+
+	// Parcours de la liste des utilisateurs
+	for (let user of usersList) {
+		// Vérifie si le token correspond à celui de l'utilisateur
+		if (user.token === token) {
+
+			// Vérifie si un nouveau username est fourni
+			if (req.body.username) {
+				user.username = req.body.username;
+
+				// Sauvegarde des modifications dans le fichier JSON
+				const updatedData = JSON.stringify(usersList, null, 2);
+				fs.writeFileSync("data/users.json", updatedData);
+
+				return res.json({
+					message: "OK, new username is : " + user.username
+				});
+			}
+		}
+	}
+}
+
+module.exports = { RegisterUser, Login, Update };
