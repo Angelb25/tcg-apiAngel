@@ -58,8 +58,25 @@ function OpenBooster(req, res) {
         const booster = [];
 
         for (let i = 0; i < 3; i++) {
-            const randomIndex = Math.floor(Math.random() * cards.length);
-            const card = cards[randomIndex];
+
+            const rarity = getRandomRarity();
+
+            // Cartes correspondant à la rareté
+            const cardsByRarity = cards.filter(
+                card => card.rarity === rarity
+            );
+
+            // Sécurité (au cas où)
+            if (cardsByRarity.length === 0) {
+                i--;
+                continue;
+            }
+
+            const randomIndex = Math.floor(
+                Math.random() * cardsByRarity.length
+            );
+
+            const card = cardsByRarity[randomIndex];
 
             booster.push(card);
             user.collection.push(card.id);
@@ -85,7 +102,13 @@ function OpenBooster(req, res) {
     }
 }
 
-module.exports = { OpenBooster };
+function Random() {
+    const roll = Math.random() * 100;
+
+    if (roll < 80) return "Common";
+    if (roll < 95) return "Rare";
+    return "Legendary";
+}
 
 
-module.exports = { GetCards, OpenBooster };
+module.exports = { GetCards, OpenBooster, Random };
