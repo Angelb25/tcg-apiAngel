@@ -136,5 +136,48 @@ function Update(req, res) {
         message: "Erreur : Token invalide"
     });
 }
+function Disconnect(req, res) {
 
-module.exports = { RegisterUser, Login, Update };
+    const token = req.headers.authorization;
+
+    if (!token) {
+        return res.status(400).json({
+            message: "Erreur : Token manquant"
+        });
+    }
+
+    try {
+        const filePath = "data/users.json";
+        const fileData = fs.readFileSync(filePath, "utf-8");
+        const users = JSON.parse(fileData);
+
+        for (let user of users) {
+            if (user.token === token) {
+
+                // Suppression du token = déconnexion
+                delete user.token;
+
+                fs.writeFileSync(
+                    filePath,
+                    JSON.stringify(users, null, 2)
+                );
+
+                return res.json({
+                    message: "Déconnexion réussie"
+                });
+            }
+        }
+
+        // Token invalide
+        return res.status(401).json({
+            message: "Erreur : Token invalide"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Erreur serveur"
+        });
+    }
+}
+
+module.exports = { RegisterUser, Login, Update, Disconnect };
