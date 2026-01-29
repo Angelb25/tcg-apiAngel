@@ -3,8 +3,16 @@
     "id": 1,
     "username": "Exemple",
     "password": "exemple",
-    "collection": [],
-    "token": "TFqt3oNLk4TFKrRvH9Tcdk"
+    "collection": [
+      1,
+      7,
+      4,
+      25,
+      7,
+      1
+    ],
+    "token": "TFqt3oNLk4TFKrRvH9Tcdk",
+    "lastBooster": 1769681016258
   },
   {
     "id": 2,

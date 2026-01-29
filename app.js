@@ -20,6 +20,7 @@ app.get("/", (req, res) => {
     });
 });
 
+app.put("/booster", cards.OpenBooster)
 app.get("/cards", cards.GetCards)
 app.post("/register", users.RegisterUser);
 app.post("/login", users.Login);
