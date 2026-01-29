@@ -1,16 +1,17 @@
 const express = require('express');
 const app = express();
 const port = 3000;
+
 const users = require('./modules/users');
+const cards = require('./modules/cards');
 
-const swaggerUi = require("swagger-ui-express");
-const swaggerSpec = require("./src/config/swagger");
-
+// const swaggerUi = require("swagger-ui-express");
+// const swaggerSpec = require("./config/swagger");
+// app.use("/", swaggerUi.serve);
+// app.get("/", swaggerUi.setup(swaggerSpec));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use("/", swaggerUi.serve);
-app.get("/", swaggerUi.setup(swaggerSpec));
 
 app.get("/", (req, res) => {
     res.json({
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
     });
 });
 
+app.get("/cards", cards.GetCards)
 app.post("/register", users.RegisterUser);
 app.post("/login", users.Login);
 app.patch("/user", users.Update);

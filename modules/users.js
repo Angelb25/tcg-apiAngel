@@ -21,7 +21,7 @@ function RegisterUser(req, res) {
         const fileData = fs.readFileSync(filePath, 'utf8');
         let users = JSON.parse(fileData);
 
-        // Utilisateur déjà existant
+        // Username déjà existant
         const existingUser = users.find(u => u.username === username);
         if (existingUser) {
             return res.status(400).json({
