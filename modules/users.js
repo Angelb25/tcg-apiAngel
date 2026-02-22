@@ -1,6 +1,49 @@
 const fs = require('fs');
 const path = require('path');
 const TokenGenerator = require('uuid-token-generator');
+function GetUser(req, res) {
+
+    const token = req.headers.authorization;
+
+    if (!token) {
+        return res.status(400).json({
+            message: "Erreur : Token manquant"
+        });
+    }
+
+    try {
+        const filePath = path.join(__dirname, '../data/users.json');
+        const fileData = fs.readFileSync(filePath, 'utf8');
+        const users = JSON.parse(fileData);
+
+        const user = users.find(u => u.token === token);
+
+        if (!user) {
+            return res.status(401).json({
+                message: "Erreur : Token invalide"
+            });
+        }
+
+        // On ne renvoie pas le mot de passe
+        const safeUser = {
+            id: user.id,
+            username: user.username,
+            collection: user.collection,
+            currency: user.currency,
+            lastBooster: user.lastBooster
+        };
+
+        return res.json({
+            message: "Utilisateur trouvé",
+            data: safeUser
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Erreur serveur"
+        });
+    }
+}
 
 function RegisterUser(req, res) {
 
@@ -179,5 +222,96 @@ function Disconnect(req, res) {
         });
     }
 }
+function Convert(req, res) {
 
-module.exports = { RegisterUser, Login, Update, Disconnect };
+    const token = req.headers.authorization;
+    const cardId = parseInt(req.body.card_id);
+
+    if (!token) {
+        return res.status(400).json({
+            message: "Erreur : Token manquant"
+        });
+    }
+
+    if (!cardId) {
+        return res.status(400).json({
+            message: "Erreur : id de carte manquant"
+        });
+    }
+
+    try {
+        const usersPath = path.join(__dirname, "../data/users.json");
+        const cardsPath = path.join(__dirname, "../data/cards.json");
+
+        const usersData = fs.readFileSync(usersPath, "utf-8");
+        const cardsData = fs.readFileSync(cardsPath, "utf-8");
+
+        const users = JSON.parse(usersData);
+        const cards = JSON.parse(cardsData);
+
+        const user = users.find(u => u.token === token);
+
+        if (!user) {
+            return res.status(401).json({
+                message: "Erreur : Token invalide"
+            });
+        }
+
+        // Vérifier que l'utilisateur possède la carte
+        const verif = user.collection.find(c => c.id === cardId);
+
+        if (!verif) {
+            return res.status(400).json({
+                message: "Erreur : Vous ne possédez pas cette carte"
+            });
+        }
+
+        if (verif.nb < 2) {
+            return res.status(400).json({
+                message: "Erreur : Impossible de convertir, vous devez avoir au moins 2 exemplaires"
+            });
+        }
+
+        // Trouve carte dans cards.json
+        const card = cards.find(c => c.id === cardId);
+
+        if (!card) {
+            return res.status(400).json({
+                message: "Erreur : Carte introuvable"
+            });
+        }
+
+        // selon rareté
+        const conversionValues = {
+            "common": 1,
+            "rare": 5,
+            "legendary": 20
+        };
+
+        const gain = conversionValues[card.rarity] || 1;
+
+        // Mise à jour de la monnaie
+        user.currency += gain;
+
+        // Sauvegarde
+        fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+
+        return res.json({
+            message: "Conversion réussie",
+            data: {
+                card_id: cardId,
+                rarity: card.rarity,
+                gain: gain,
+                new_currency: user.currency
+            }
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Erreur serveur"
+        });
+    }
+}
+
+
+module.exports = { RegisterUser, Login, Update, Disconnect, GetUser, Convert };

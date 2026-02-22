@@ -18,6 +18,14 @@ function GetCards(req, res) {
     }
 }
 
+function getRandomRarity() {
+    const roll = Math.random() * 100;
+
+    if (roll < 80) return "common";
+    if (roll < 95) return "rare";
+    return "legendary";
+}
+
 function OpenBooster(req, res) {
 
     const token = req.headers.authorization;
@@ -40,6 +48,7 @@ function OpenBooster(req, res) {
             });
         }
 
+        // Délai 5 minutes
         const fivemin = 5 * 60 * 1000;
 
         if (user.lastBooster && Date.now() - user.lastBooster < fivemin) {
@@ -48,46 +57,34 @@ function OpenBooster(req, res) {
             });
         }
 
-        if (!user.collection) {
-            user.collection = [];
-        }
-
         const cardsData = fs.readFileSync("data/cards.json", "utf-8");
         const cards = JSON.parse(cardsData);
 
         const booster = [];
 
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 5; i++) {
 
             const rarity = getRandomRarity();
+            const cardsByRarity = cards.filter(card => card.rarity === rarity);
 
-            // Cartes correspondant à la rareté
-            const cardsByRarity = cards.filter(
-                card => card.rarity === rarity
-            );
-
-            // Sécurité (au cas où)
-            if (cardsByRarity.length === 0) {
-                i--;
-                continue;
-            }
-
-            const randomIndex = Math.floor(
-                Math.random() * cardsByRarity.length
-            );
-
+            const randomIndex = Math.floor(Math.random() * cardsByRarity.length);
             const card = cardsByRarity[randomIndex];
 
             booster.push(card);
-            user.collection.push(card.id);
+
+            // Gestion des doublons
+            let existing = user.collection.find(c => c.id === card.id);
+
+            if (existing) {
+                existing.nb++;
+            } else {
+                user.collection.push({ id: card.id, nb: 1 });
+            }
         }
 
         user.lastBooster = Date.now();
 
-        fs.writeFileSync(
-            "data/users.json",
-            JSON.stringify(users, null, 2)
-        );
+        fs.writeFileSync("data/users.json", JSON.stringify(users, null, 2));
 
         return res.json({
             message: "Booster ouvert avec succès",
@@ -102,13 +99,13 @@ function OpenBooster(req, res) {
     }
 }
 
-function Random() {
-    const roll = Math.random() * 100;
-
-    if (roll < 80) return "Common";
-    if (roll < 95) return "Rare";
-    return "Legendary";
-}
+module.exports = { GetCards, OpenBooster, getRandomRarity };
 
 
-module.exports = { GetCards, OpenBooster, Random };
+function getRandomRarity() { const roll = Math.random() * 100; 
+    if (roll < 80) return "common"; 
+    if (roll < 95) return "rare"; 
+    return "legendary"; }
+
+
+module.exports = { GetCards, OpenBooster, getRandomRarity };
