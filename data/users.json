@@ -5,11 +5,11 @@
     "password": "exemple",
     "token": "TFqt3oNLk4TFKrRvH9Tcdk",
     "currency": 0,
-    "lastBooster": 1769681016258,
+    "lastBooster": 1771919106985,
     "collection": [
       {
         "id": 1,
-        "nb": 2
+        "nb": 3
       },
       {
         "id": 7,
@@ -21,6 +21,10 @@
       },
       {
         "id": 25,
+        "nb": 4
+      },
+      {
+        "id": 150,
         "nb": 1
       }
     ]
@@ -30,7 +34,7 @@
     "username": "Toto",
     "password": "toot",
     "token": "SDdCMNMN37bTaYMmZ4sV4Y",
-    "currency": 1,
+    "currency": 2,
     "lastBooster": 1771016365269,
     "collection": [
       {
@@ -51,9 +55,15 @@
     "id": 3,
     "username": "toto",
     "password": "1234",
-    "token": null,
+    "token": "SNQKWjsKkp4o9dXvhYzqWR",
     "currency": 0,
     "lastBooster": null,
     "collection": []
+  },
+  {
+    "id": 4,
+    "username": "thierry",
+    "password": "example",
+    "token": "8qdp3zC4EGREjF6BcGc36K"
   }
 ]

@@ -1,10 +1,14 @@
-const fs = require('fs');
-const path = require('path');
-const TokenGenerator = require('uuid-token-generator');
+// Import des modules nécessaires
+const fs = require('fs');                 // lire/écrire les fichiers JSON
+const path = require('path');             // gérer les chemins de fichiers
+const TokenGenerator = require('uuid-token-generator'); // générer des tokens uniques
+
+//  GET USER 
 function GetUser(req, res) {
 
-    const token = req.headers.authorization;
+    const token = req.headers.authorization; // Token envoyé dans les headers
 
+    // Aucun token fourni
     if (!token) {
         return res.status(400).json({
             message: "Erreur : Token manquant"
@@ -12,19 +16,22 @@ function GetUser(req, res) {
     }
 
     try {
+        // Lecture du fichier users.json
         const filePath = path.join(__dirname, '../data/users.json');
         const fileData = fs.readFileSync(filePath, 'utf8');
         const users = JSON.parse(fileData);
 
+        // Recherche de l'utilisateur correspondant au token
         const user = users.find(u => u.token === token);
 
+        // Aucun utilisateur trouvé
         if (!user) {
             return res.status(401).json({
                 message: "Erreur : Token invalide"
             });
         }
 
-        // On ne renvoie pas le mot de passe
+        // renvoie d'un utilisateur 
         const safeUser = {
             id: user.id,
             username: user.username,
@@ -45,16 +52,17 @@ function GetUser(req, res) {
     }
 }
 
+//  REGISTER 
 function RegisterUser(req, res) {
 
-    // Pas de données envoyées
+    // Aucune donnée envoyée
     if (!req.body) {
         return res.status(400).json({ message: "Erreur : Aucune donnée" });
     }
 
     const { username, password, collection } = req.body;
 
-    // Username ou mot de passe absent
+    // Champs obligatoires manquants
     if (!username || !password) {
         return res.status(400).json({ message: "Erreur : Données manquantes" });
     }
@@ -64,7 +72,7 @@ function RegisterUser(req, res) {
         const fileData = fs.readFileSync(filePath, 'utf8');
         let users = JSON.parse(fileData);
 
-        // Username déjà existant
+        // Vérifier si le username existe déjà
         const existingUser = users.find(u => u.username === username);
         if (existingUser) {
             return res.status(400).json({
@@ -72,6 +80,7 @@ function RegisterUser(req, res) {
             });
         }
 
+        // Création du nouvel utilisateur
         const newUser = {
             id: users.length + 1,
             username,
@@ -81,6 +90,7 @@ function RegisterUser(req, res) {
 
         users.push(newUser);
 
+        // Sauvegarde dans le fichier
         fs.writeFileSync(filePath, JSON.stringify(users, null, 2));
 
         res.json({
@@ -92,8 +102,9 @@ function RegisterUser(req, res) {
     }
 }
 
-
+//  LOGIN 
 function Login(req, res) {
+
     if (!req.body) {
         return res.status(400).json({ message: "Erreur : Aucune donnée" });
     }
@@ -103,40 +114,36 @@ function Login(req, res) {
     try {
         const filePath = path.join(__dirname, '../data/users.json');
 
-        // Lire le fichier json
+        // Lecture du fichier
         const fileData = fs.readFileSync(filePath, 'utf8');
         let users = JSON.parse(fileData);
 
-        // Chercher un utilisateur
+        // Recherche d'un utilisateur correspondant
         const user = users.find(
             u => u.username === username && u.password === password
         );
 
+        // Identifiants incorrects
         if (!user) {
             return res.status(401).json({
                 message: "Identifiants incorrects"
             });
         }
-        
-        const tokgen = new TokenGenerator();
-        const token = tokgen.generate(); // génère un token
 
-        // Enregistrer le token dans l'utilisateur
+        // Génére d'un token unique
+        const tokgen = new TokenGenerator();
+        const token = tokgen.generate();
+
+        // Enregistrement du token dans l'utilisateur
         user.token = token;
 
-        // Sauvegarder la nouvelle liste
-        fs.writeFileSync(
-            filePath,
-            JSON.stringify(users, null, 2),
-            'utf8'
-        );
+        // Sauvegarde
+        fs.writeFileSync(filePath, JSON.stringify(users, null, 2), 'utf8');
 
         // Réponse
         res.json({
             message: "Authentification réussie",
-            data: {
-                token: token
-            }
+            data: { token }
         });
 
     } catch (error) {
@@ -145,6 +152,7 @@ function Login(req, res) {
     }
 }
 
+//  UPDATE 
 function Update(req, res) {
 
     const fileContent = fs.readFileSync("data/users.json", "utf-8");
@@ -152,13 +160,16 @@ function Update(req, res) {
 
     const token = req.headers.authorization;
 
+    // Aucun token fourni
     if (!token) {
         return res.status(400).json({ message: "Erreur : Token manquant" });
     }
 
+    // Recherche de l'utilisateur
     for (let user of usersList) {
         if (user.token === token) {
 
+            // Mise à jour du username
             if (req.body.username) {
                 user.username = req.body.username;
 
@@ -174,15 +185,18 @@ function Update(req, res) {
         }
     }
 
-    // Token invalide
+    // Aucun utilisateur trouvé
     return res.status(401).json({
         message: "Erreur : Token invalide"
     });
 }
+
+//  DISCONNECT 
 function Disconnect(req, res) {
 
     const token = req.headers.authorization;
 
+    // Aucun token fourni
     if (!token) {
         return res.status(400).json({
             message: "Erreur : Token manquant"
@@ -194,16 +208,14 @@ function Disconnect(req, res) {
         const fileData = fs.readFileSync(filePath, "utf-8");
         const users = JSON.parse(fileData);
 
+        // Recherche de l'utilisateur
         for (let user of users) {
             if (user.token === token) {
 
                 // Suppression du token = déconnexion
                 delete user.token;
 
-                fs.writeFileSync(
-                    filePath,
-                    JSON.stringify(users, null, 2)
-                );
+                fs.writeFileSync(filePath, JSON.stringify(users, null, 2));
 
                 return res.json({
                     message: "Déconnexion réussie"
@@ -222,17 +234,21 @@ function Disconnect(req, res) {
         });
     }
 }
+
+//  CONVERT
 function Convert(req, res) {
 
     const token = req.headers.authorization;
     const cardId = parseInt(req.body.card_id);
 
+    // Vérification du token
     if (!token) {
         return res.status(400).json({
             message: "Erreur : Token manquant"
         });
     }
 
+    // Vérification de l'id de la carte
     if (!cardId) {
         return res.status(400).json({
             message: "Erreur : id de carte manquant"
@@ -249,6 +265,7 @@ function Convert(req, res) {
         const users = JSON.parse(usersData);
         const cards = JSON.parse(cardsData);
 
+        // Trouver l'utilisateur
         const user = users.find(u => u.token === token);
 
         if (!user) {
@@ -257,7 +274,7 @@ function Convert(req, res) {
             });
         }
 
-        // Vérifier que l'utilisateur possède la carte
+        // Vérifie que l'utilisateur possède la carte
         const verif = user.collection.find(c => c.id === cardId);
 
         if (!verif) {
@@ -266,13 +283,14 @@ function Convert(req, res) {
             });
         }
 
+        // Vérifie qu'il en possède au moins 2
         if (verif.nb < 2) {
             return res.status(400).json({
                 message: "Erreur : Impossible de convertir, vous devez avoir au moins 2 exemplaires"
             });
         }
 
-        // Trouve carte dans cards.json
+        // Trouve la carte dans lejson
         const card = cards.find(c => c.id === cardId);
 
         if (!card) {
@@ -281,7 +299,7 @@ function Convert(req, res) {
             });
         }
 
-        // selon rareté
+        // Valeurs de conversion selon rareté
         const conversionValues = {
             "common": 1,
             "rare": 5,
@@ -313,5 +331,5 @@ function Convert(req, res) {
     }
 }
 
-
+// EXPORT DES FONCTIONS
 module.exports = { RegisterUser, Login, Update, Disconnect, GetUser, Convert };
