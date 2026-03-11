@@ -1,4 +1,4 @@
-[    
+[
 { 
     "id": 1, 
     "name": "Bulbizarre", 
@@ -15,10 +15,65 @@
     "rarity": "common" 
 }, 
 { 
+    "id": 10, 
+    "name": "Chenipan", 
+    "rarity": "common" 
+},
+{ 
+    "id": 16, 
+    "name": "Roucool", 
+    "rarity": "common" 
+},
+{ 
+    "id": 19, 
+    "name": "Rattata", 
+    "rarity": "common" 
+},
+{ 
     "id": 25, 
     "name": "Pikachu", 
     "rarity": "rare" 
 }, 
+{ 
+    "id": 39, 
+    "name": "Rondoudou", 
+    "rarity": "rare" 
+},
+{ 
+    "id": 52, 
+    "name": "Miaouss", 
+    "rarity": "rare" 
+},
+{ 
+    "id": 94, 
+    "name": "Ectoplasma", 
+    "rarity": "epic" 
+},
+{ 
+    "id": 131, 
+    "name": "Lokhlass", 
+    "rarity": "epic" 
+},
+{ 
+    "id": 143, 
+    "name": "Ronflex", 
+    "rarity": "epic" 
+},
+{ 
+    "id": 144, 
+    "name": "Artikodin", 
+    "rarity": "legendary" 
+},
+{ 
+    "id": 145, 
+    "name": "Électhor", 
+    "rarity": "legendary" 
+},
+{ 
+    "id": 146, 
+    "name": "Sulfura", 
+    "rarity": "legendary" 
+},
 { 
     "id": 150, 
     "name": "Mewtwo", 

@@ -5,15 +5,27 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const app = express();
 const port = 3000;
 
+const db = require("./db");
+
 // Import de module 
 const bids = require('./modules/bids');
 const users = require('./modules/users');
 const cards = require('./modules/cards');
 
+// Import models
+const User = require("./Models/User");
+const Card = require("./Models/Card");
+const Bid = require("./Models/Bid");
+
+// Synchronisation de la BDD
+db.sync({ alter: true })
+  .then(() => console.log("Tables synchronisées"))
+  .catch(err => console.error(err));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Swagger 
+// Configuration Swagger 
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -59,7 +71,7 @@ app.get("/", (req, res) => {
  *     tags: [Cards]
  *     responses:
  *       200:
- *         description: Booster ouvert
+ *         description: Booster ouvert !
  */
 app.put("/booster", cards.OpenBooster);
 

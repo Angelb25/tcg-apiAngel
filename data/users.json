@@ -65,5 +65,82 @@
     "username": "thierry",
     "password": "example",
     "token": "8qdp3zC4EGREjF6BcGc36K"
+  },
+  {
+    "id": 5,
+    "username": "angeltoto",
+    "password": "toto",
+    "collection": [
+      {
+        "id": 25,
+        "nb": 2
+      },
+      {
+        "id": 16,
+        "nb": 1
+      },
+      {
+        "id": 52,
+        "nb": 1
+      },
+      {
+        "id": 4,
+        "nb": 1
+      }
+    ],
+    "lastBooster": 1773130169631,
+    "currency": null,
+    "token": "JzfSovVpS6kecJFntiewi6"
+  },
+  {
+    "id": 6,
+    "username": "teste",
+    "password": "test",
+    "token": "3Wat4c16TtLrRfmnGC1j7V",
+    "collection": [
+      {
+        "id": 1,
+        "nb": 1
+      },
+      {
+        "id": 4,
+        "nb": 2
+      },
+      {
+        "id": 16,
+        "nb": 1
+      },
+      {
+        "id": 146,
+        "nb": 1
+      }
+    ],
+    "lastBooster": 1773147269988,
+    "currency": null
+  },
+  {
+    "id": 7,
+    "username": "totoo",
+    "password": "toto",
+    "collection": [
+      {
+        "id": 7,
+        "nb": 2
+      },
+      {
+        "id": 10,
+        "nb": 1
+      },
+      {
+        "id": 4,
+        "nb": 1
+      },
+      {
+        "id": 16,
+        "nb": 1
+      }
+    ],
+    "lastBooster": 1773158079289,
+    "currency": 3
   }
 ]
